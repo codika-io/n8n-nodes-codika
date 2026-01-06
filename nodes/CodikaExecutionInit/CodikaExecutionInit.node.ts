@@ -13,7 +13,7 @@ export class CodikaExecutionInit implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Codika Execution Init',
 		name: 'codikaExecutionInit',
-		icon: { light: 'file:codika.svg', dark: 'file:codika.dark.svg' },
+		icon: { light: 'file:../../icons/codika.svg', dark: 'file:../../icons/codika.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		subtitle: 'Initialize workflow execution',
