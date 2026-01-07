@@ -27,22 +27,6 @@ function tryGetInitNodeData(context, itemIndex = 0) {
     }
     catch {
     }
-    const nodeNames = ['Codika', 'Codika Init'];
-    for (const nodeName of nodeNames) {
-        try {
-            const expression = `$('${nodeName}').first().json`;
-            const result = context.evaluateExpression(expression, itemIndex);
-            if ((result === null || result === void 0 ? void 0 : result.executionId) && (result === null || result === void 0 ? void 0 : result.executionSecret)) {
-                return {
-                    executionId: result.executionId,
-                    executionSecret: result.executionSecret,
-                    startTimeMs: result._startTimeMs || 0,
-                };
-            }
-        }
-        catch {
-        }
-    }
     return null;
 }
 function validateExecutionParams(executionId, executionSecret, context) {

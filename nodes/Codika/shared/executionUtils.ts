@@ -15,11 +15,11 @@ export interface ExecutionData {
 
 /**
  * Tries to get execution data from the 'Codika Init' node.
- * Uses execution context (customData) first, then falls back to expression evaluation.
- * Returns null if the node is not found or hasn't been executed.
+ * Uses execution context (customData) set by the Init Workflow node.
+ * Returns null if execution context is not available.
  */
 export function tryGetInitNodeData(context: IExecuteFunctions, itemIndex = 0): ExecutionData | null {
-	// Method 1: Try execution context (most reliable - works across all node types)
+	// Get execution data from customData (set by Init Workflow node)
 	try {
 		const proxy = context.getWorkflowDataProxy(itemIndex);
 		const customData = proxy.$execution?.customData;
@@ -38,27 +38,7 @@ export function tryGetInitNodeData(context: IExecuteFunctions, itemIndex = 0): E
 			}
 		}
 	} catch {
-		// Execution context not available, try fallback
-	}
-
-	// Method 2: Fallback - try direct node reference (for simple workflows)
-	// Try new "Codika" node first, then legacy "Codika Init"
-	const nodeNames = ['Codika', 'Codika Init'];
-	for (const nodeName of nodeNames) {
-		try {
-			const expression = `$('${nodeName}').first().json`;
-			const result = context.evaluateExpression(expression, itemIndex) as Record<string, unknown> | null;
-
-			if (result?.executionId && result?.executionSecret) {
-				return {
-					executionId: result.executionId as string,
-					executionSecret: result.executionSecret as string,
-					startTimeMs: (result._startTimeMs as number) || 0,
-				};
-			}
-		} catch {
-			// Node not found, try next
-		}
+		// Execution context not available
 	}
 
 	return null;

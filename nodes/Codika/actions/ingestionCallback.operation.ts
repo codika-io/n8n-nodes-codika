@@ -22,7 +22,7 @@ interface IngestionData {
  * Tries to get ingestion data from execution context (set by initDataIngestion)
  */
 function tryGetIngestionData(context: IExecuteFunctions, itemIndex = 0): IngestionData | null {
-	// Method 1: Try execution context (most reliable)
+	// Get ingestion data from customData (set by Init Data Ingestion node)
 	try {
 		const proxy = context.getWorkflowDataProxy(itemIndex);
 		const customData = proxy.$execution?.customData;
@@ -48,28 +48,6 @@ function tryGetIngestionData(context: IExecuteFunctions, itemIndex = 0): Ingesti
 		}
 	} catch {
 		// Execution context not available
-	}
-
-	// Method 2: Fallback - try direct node reference
-	try {
-		const expression = "$('Codika').first().json";
-		const result = context.evaluateExpression(expression, itemIndex) as Record<
-			string,
-			unknown
-		> | null;
-
-		if (result?.docId && result?.callbackUrl && result?.embeddingSecret) {
-			return {
-				docId: result.docId as string,
-				callbackUrl: result.callbackUrl as string,
-				embeddingSecret: result.embeddingSecret as string,
-				processId: (result.processId as string) || '',
-				dataIngestionId: (result.dataIngestionId as string) || '',
-				startTimeMs: (result._startTimeMs as number) || 0,
-			};
-		}
-	} catch {
-		// Direct reference failed
 	}
 
 	return null;

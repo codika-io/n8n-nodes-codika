@@ -165,7 +165,7 @@ export async function executeInitWorkflow(
 				executionContext.customData.set('codikaStartTimeMs', String(startTimeMs));
 			}
 		} catch {
-			// Execution context not available - will fall back to expression evaluation
+			// Execution context not available
 		}
 
 		return [returnData];
@@ -269,7 +269,7 @@ export async function executeInitWorkflow(
 				executionContext.customData.set('codikaStartTimeMs', String(startTimeMs));
 			}
 		} catch {
-			// Execution context not available - will fall back to expression evaluation
+			// Execution context not available
 		}
 	} catch (error) {
 		// If it's already a NodeOperationError, re-throw it

@@ -29,22 +29,6 @@ function tryGetIngestionData(context, itemIndex = 0) {
     }
     catch {
     }
-    try {
-        const expression = "$('Codika').first().json";
-        const result = context.evaluateExpression(expression, itemIndex);
-        if ((result === null || result === void 0 ? void 0 : result.docId) && (result === null || result === void 0 ? void 0 : result.callbackUrl) && (result === null || result === void 0 ? void 0 : result.embeddingSecret)) {
-            return {
-                docId: result.docId,
-                callbackUrl: result.callbackUrl,
-                embeddingSecret: result.embeddingSecret,
-                processId: result.processId || '',
-                dataIngestionId: result.dataIngestionId || '',
-                startTimeMs: result._startTimeMs || 0,
-            };
-        }
-    }
-    catch {
-    }
     return null;
 }
 const displayOptions = {
