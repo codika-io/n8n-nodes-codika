@@ -109,6 +109,7 @@ export const uploadFileDescription: INodeProperties[] = [
 		displayName: 'Execution Secret (Override)',
 		name: 'executionSecretOverride',
 		type: 'string',
+		typeOptions: { password: true },
 		default: '',
 		displayOptions,
 		placeholder: '={{ $json.executionSecret }}',
