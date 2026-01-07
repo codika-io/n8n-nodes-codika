@@ -42,20 +42,23 @@ export function tryGetInitNodeData(context: IExecuteFunctions, itemIndex = 0): E
 	}
 
 	// Method 2: Fallback - try direct node reference (for simple workflows)
-	try {
-		const expression = "$('Codika Init').first().json";
-		const result = context.evaluateExpression(expression, itemIndex) as Record<string, unknown> | null;
+	// Try new "Codika" node first, then legacy "Codika Init"
+	const nodeNames = ['Codika', 'Codika Init'];
+	for (const nodeName of nodeNames) {
+		try {
+			const expression = `$('${nodeName}').first().json`;
+			const result = context.evaluateExpression(expression, itemIndex) as Record<string, unknown> | null;
 
-		if (result?.executionId && result?.executionSecret) {
-			return {
-				executionId: result.executionId as string,
-				executionSecret: result.executionSecret as string,
-				startTimeMs: (result._startTimeMs as number) || 0,
-			};
+			if (result?.executionId && result?.executionSecret) {
+				return {
+					executionId: result.executionId as string,
+					executionSecret: result.executionSecret as string,
+					startTimeMs: (result._startTimeMs as number) || 0,
+				};
+			}
+		} catch {
+			// Node not found, try next
 		}
-	} catch {
-		// Node not found, not executed, or expression failed
-		// This is expected when Init node doesn't exist - fall back to manual params
 	}
 
 	return null;
@@ -74,9 +77,9 @@ export function validateExecutionParams(
 			context.getNode(),
 			'Missing executionId or executionSecret.\n\n' +
 				'To fix this, either:\n' +
-				'1. Add a "Codika Init" node earlier in your workflow (recommended), OR\n' +
+				'1. Add a "Codika" node with "Init Workflow" operation earlier in your workflow (recommended), OR\n' +
 				'2. Manually configure executionId and executionSecret parameters.\n\n' +
-				'Note: The Init node must be named exactly "Codika Init" for auto-detection to work.',
+				'Note: The Init node must be named exactly "Codika" for auto-detection to work.',
 		);
 	}
 }

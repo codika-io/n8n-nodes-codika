@@ -32,8 +32,7 @@
         "strict": true,
         "credentials": [],
         "nodes": [
-            "dist/nodes/CodikaInit/CodikaInit.node.js",
-            "dist/nodes/CodikaEvent/CodikaEvent.node.js"
+            "dist/nodes/Codika/Codika.node.js"
         ]
     },
     "devDependencies": {

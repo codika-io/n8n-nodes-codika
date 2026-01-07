@@ -28,18 +28,21 @@ function tryGetInitNodeData(context, itemIndex = 0) {
     }
     catch {
     }
-    try {
-        const expression = "$('Codika Init').first().json";
-        const result = context.evaluateExpression(expression, itemIndex);
-        if ((result === null || result === void 0 ? void 0 : result.executionId) && (result === null || result === void 0 ? void 0 : result.executionSecret)) {
-            return {
-                executionId: result.executionId,
-                executionSecret: result.executionSecret,
-                startTimeMs: result._startTimeMs || 0,
-            };
+    const nodeNames = ['Codika', 'Codika Init'];
+    for (const nodeName of nodeNames) {
+        try {
+            const expression = `$('${nodeName}').first().json`;
+            const result = context.evaluateExpression(expression, itemIndex);
+            if ((result === null || result === void 0 ? void 0 : result.executionId) && (result === null || result === void 0 ? void 0 : result.executionSecret)) {
+                return {
+                    executionId: result.executionId,
+                    executionSecret: result.executionSecret,
+                    startTimeMs: result._startTimeMs || 0,
+                };
+            }
         }
-    }
-    catch {
+        catch {
+        }
     }
     return null;
 }
@@ -47,9 +50,9 @@ function validateExecutionParams(executionId, executionSecret, context) {
     if (!executionId || !executionSecret) {
         throw new n8n_workflow_1.NodeOperationError(context.getNode(), 'Missing executionId or executionSecret.\n\n' +
             'To fix this, either:\n' +
-            '1. Add a "Codika Init" node earlier in your workflow (recommended), OR\n' +
+            '1. Add a "Codika" node with "Init Workflow" operation earlier in your workflow (recommended), OR\n' +
             '2. Manually configure executionId and executionSecret parameters.\n\n' +
-            'Note: The Init node must be named exactly "Codika Init" for auto-detection to work.');
+            'Note: The Init node must be named exactly "Codika" for auto-detection to work.');
     }
 }
 function resolveExecutionParams(autoData, manualExecutionId, manualExecutionSecret, manualStartTimeMs) {
