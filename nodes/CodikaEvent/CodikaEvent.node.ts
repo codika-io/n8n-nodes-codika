@@ -10,7 +10,7 @@ import { descriptions } from './actions';
 import { executeSubmitResult } from './actions/submitResult.operation';
 import { executeReportError } from './actions/reportError.operation';
 
-export class CodikaWorkflowEvent implements INodeType {
+export class CodikaEvent implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Codika Event',
 		name: 'codikaEvent',

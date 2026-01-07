@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CodikaExecutionInit = void 0;
+exports.CodikaInit = void 0;
 const n8n_workflow_1 = require("n8n-workflow");
 const CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
 function tryExtractHttpTriggerMetadata(inputData) {
@@ -28,7 +28,7 @@ function tryExtractHttpTriggerMetadata(inputData) {
     }
     return null;
 }
-class CodikaExecutionInit {
+class CodikaInit {
     constructor() {
         this.description = {
             displayName: 'Codika Init',
@@ -191,5 +191,5 @@ class CodikaExecutionInit {
         return [returnData];
     }
 }
-exports.CodikaExecutionInit = CodikaExecutionInit;
+exports.CodikaInit = CodikaInit;
 //# sourceMappingURL=CodikaInit.node.js.map

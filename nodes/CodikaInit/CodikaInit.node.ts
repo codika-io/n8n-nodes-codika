@@ -60,7 +60,7 @@ function tryExtractHttpTriggerMetadata(inputData: INodeExecutionData[]): Executi
 	return null;
 }
 
-export class CodikaExecutionInit implements INodeType {
+export class CodikaInit implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Codika Init',
 		name: 'codikaInit',

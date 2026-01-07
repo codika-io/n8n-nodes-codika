@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CodikaWorkflowEvent = void 0;
+exports.CodikaEvent = void 0;
 const n8n_workflow_1 = require("n8n-workflow");
 const actions_1 = require("./actions");
 const submitResult_operation_1 = require("./actions/submitResult.operation");
 const reportError_operation_1 = require("./actions/reportError.operation");
-class CodikaWorkflowEvent {
+class CodikaEvent {
     constructor() {
         this.description = {
             displayName: 'Codika Event',
@@ -36,5 +36,5 @@ class CodikaWorkflowEvent {
         }
     }
 }
-exports.CodikaWorkflowEvent = CodikaWorkflowEvent;
+exports.CodikaEvent = CodikaEvent;
 //# sourceMappingURL=CodikaEvent.node.js.map
