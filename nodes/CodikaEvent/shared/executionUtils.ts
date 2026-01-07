@@ -13,13 +13,13 @@ export interface ExecutionData {
 }
 
 /**
- * Tries to get execution data from the 'Codika Execution Init' node.
+ * Tries to get execution data from the 'Codika Init' node.
  * Returns null if the node is not found or hasn't been executed.
  */
 export function tryGetInitNodeData(context: IExecuteFunctions): ExecutionData | null {
 	try {
 		// Use n8n's expression evaluation to reference the Init node
-		const expression = "$('Codika Execution Init').first().json";
+		const expression = "$('Codika Init').first().json";
 		const result = context.evaluateExpression(expression, 0) as Record<string, unknown> | null;
 
 		if (result?.executionId && result?.executionSecret) {
@@ -49,9 +49,9 @@ export function validateExecutionParams(
 			context.getNode(),
 			'Missing executionId or executionSecret.\n\n' +
 				'To fix this, either:\n' +
-				'1. Add a "Codika Execution Init" node earlier in your workflow (recommended), OR\n' +
+				'1. Add a "Codika Init" node earlier in your workflow (recommended), OR\n' +
 				'2. Manually configure executionId and executionSecret parameters.\n\n' +
-				'Note: The Init node must be named exactly "Codika Execution Init" for auto-detection to work.',
+				'Note: The Init node must be named exactly "Codika Init" for auto-detection to work.',
 		);
 	}
 }

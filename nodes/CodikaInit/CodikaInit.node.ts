@@ -62,8 +62,8 @@ function tryExtractHttpTriggerMetadata(inputData: INodeExecutionData[]): Executi
 
 export class CodikaExecutionInit implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Codika Execution Init',
-		name: 'codikaExecutionInit',
+		displayName: 'Codika Init',
+		name: 'codikaInit',
 		icon: { light: 'file:../../icons/codika.svg', dark: 'file:../../icons/codika.dark.svg' },
 		group: ['transform'],
 		version: 1,
@@ -71,7 +71,7 @@ export class CodikaExecutionInit implements INodeType {
 		description:
 			'Initialize a Codika workflow execution. Auto-detects HTTP triggers (passthrough) vs Schedule/Service triggers (creates execution via API).',
 		defaults: {
-			name: 'Codika Execution Init',
+			name: 'Codika Init',
 		},
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],

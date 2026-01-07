@@ -9,6 +9,7 @@ import {
 
 const displayOptions = {
 	show: {
+		resource: ['workflowOutputs'],
 		operation: ['reportError'],
 	},
 };

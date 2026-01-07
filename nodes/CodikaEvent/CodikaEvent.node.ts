@@ -12,16 +12,16 @@ import { executeReportError } from './actions/reportError.operation';
 
 export class CodikaWorkflowEvent implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Codika Workflow Event',
-		name: 'codikaWorkflowEvent',
+		displayName: 'Codika Event',
+		name: 'codikaEvent',
 		icon: { light: 'file:../../icons/codika.svg', dark: 'file:../../icons/codika.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{ $parameter["operation"] }}',
 		description:
-			'Submit workflow results or report errors to Codika for execution tracking. Auto-detects execution parameters from Codika Execution Init node.',
+			'Submit workflow results or report errors to Codika for execution tracking. Auto-detects execution parameters from Codika Init node.',
 		defaults: {
-			name: 'Codika Workflow Event',
+			name: 'Codika Event',
 		},
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],

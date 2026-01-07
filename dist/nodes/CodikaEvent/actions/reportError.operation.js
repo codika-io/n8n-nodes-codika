@@ -6,6 +6,7 @@ const n8n_workflow_1 = require("n8n-workflow");
 const executionUtils_1 = require("../shared/executionUtils");
 const displayOptions = {
     show: {
+        resource: ['workflowOutputs'],
         operation: ['reportError'],
     },
 };

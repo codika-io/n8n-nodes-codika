@@ -31,15 +31,15 @@ function tryExtractHttpTriggerMetadata(inputData) {
 class CodikaExecutionInit {
     constructor() {
         this.description = {
-            displayName: 'Codika Execution Init',
-            name: 'codikaExecutionInit',
+            displayName: 'Codika Init',
+            name: 'codikaInit',
             icon: { light: 'file:../../icons/codika.svg', dark: 'file:../../icons/codika.dark.svg' },
             group: ['transform'],
             version: 1,
             subtitle: 'Initialize workflow execution',
             description: 'Initialize a Codika workflow execution. Auto-detects HTTP triggers (passthrough) vs Schedule/Service triggers (creates execution via API).',
             defaults: {
-                name: 'Codika Execution Init',
+                name: 'Codika Init',
             },
             inputs: [n8n_workflow_1.NodeConnectionTypes.Main],
             outputs: [n8n_workflow_1.NodeConnectionTypes.Main],
@@ -192,4 +192,4 @@ class CodikaExecutionInit {
     }
 }
 exports.CodikaExecutionInit = CodikaExecutionInit;
-//# sourceMappingURL=CodikaExecutionInit.node.js.map
+//# sourceMappingURL=CodikaInit.node.js.map

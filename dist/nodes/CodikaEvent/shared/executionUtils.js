@@ -9,7 +9,7 @@ const n8n_workflow_1 = require("n8n-workflow");
 exports.CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
 function tryGetInitNodeData(context) {
     try {
-        const expression = "$('Codika Execution Init').first().json";
+        const expression = "$('Codika Init').first().json";
         const result = context.evaluateExpression(expression, 0);
         if ((result === null || result === void 0 ? void 0 : result.executionId) && (result === null || result === void 0 ? void 0 : result.executionSecret)) {
             return {
@@ -27,9 +27,9 @@ function validateExecutionParams(executionId, executionSecret, context) {
     if (!executionId || !executionSecret) {
         throw new n8n_workflow_1.NodeOperationError(context.getNode(), 'Missing executionId or executionSecret.\n\n' +
             'To fix this, either:\n' +
-            '1. Add a "Codika Execution Init" node earlier in your workflow (recommended), OR\n' +
+            '1. Add a "Codika Init" node earlier in your workflow (recommended), OR\n' +
             '2. Manually configure executionId and executionSecret parameters.\n\n' +
-            'Note: The Init node must be named exactly "Codika Execution Init" for auto-detection to work.');
+            'Note: The Init node must be named exactly "Codika Init" for auto-detection to work.');
     }
 }
 function resolveExecutionParams(autoData, manualExecutionId, manualExecutionSecret, manualStartTimeMs) {

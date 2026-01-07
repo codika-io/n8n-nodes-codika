@@ -8,15 +8,15 @@ const reportError_operation_1 = require("./actions/reportError.operation");
 class CodikaWorkflowEvent {
     constructor() {
         this.description = {
-            displayName: 'Codika Workflow Event',
-            name: 'codikaWorkflowEvent',
+            displayName: 'Codika Event',
+            name: 'codikaEvent',
             icon: { light: 'file:../../icons/codika.svg', dark: 'file:../../icons/codika.dark.svg' },
             group: ['transform'],
             version: 1,
             subtitle: '={{ $parameter["operation"] }}',
-            description: 'Submit workflow results or report errors to Codika for execution tracking. Auto-detects execution parameters from Codika Execution Init node.',
+            description: 'Submit workflow results or report errors to Codika for execution tracking. Auto-detects execution parameters from Codika Init node.',
             defaults: {
-                name: 'Codika Workflow Event',
+                name: 'Codika Event',
             },
             inputs: [n8n_workflow_1.NodeConnectionTypes.Main],
             outputs: [n8n_workflow_1.NodeConnectionTypes.Main],
@@ -37,4 +37,4 @@ class CodikaWorkflowEvent {
     }
 }
 exports.CodikaWorkflowEvent = CodikaWorkflowEvent;
-//# sourceMappingURL=CodikaWorkflowEvent.node.js.map
+//# sourceMappingURL=CodikaEvent.node.js.map

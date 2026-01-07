@@ -13,7 +13,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/<...>/n8n-nodes-<...>.git"
+        "url": "https://github.com/codika-io/n8n-nodes-codika.git"
     },
    "scripts": {
 		"build": "n8n-node build",
@@ -32,8 +32,8 @@
         "strict": true,
         "credentials": [],
         "nodes": [
-            "dist/nodes/CodikaExecutionInit/CodikaExecutionInit.node.js",
-            "dist/nodes/CodikaWorkflowEvent/CodikaWorkflowEvent.node.js"
+            "dist/nodes/CodikaInit/CodikaInit.node.js",
+            "dist/nodes/CodikaEvent/CodikaEvent.node.js"
         ]
     },
     "devDependencies": {
