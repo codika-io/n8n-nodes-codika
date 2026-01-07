@@ -9,6 +9,7 @@ import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 import { descriptions } from './actions';
 import { executeSubmitResult } from './actions/submitResult.operation';
 import { executeReportError } from './actions/reportError.operation';
+import { executeUploadFile } from './actions/uploadFile.operation';
 
 export class CodikaEvent implements INodeType {
 	description: INodeTypeDescription = {
@@ -19,7 +20,7 @@ export class CodikaEvent implements INodeType {
 		version: 1,
 		subtitle: '={{ $parameter["operation"] }}',
 		description:
-			'Submit workflow results or report errors to Codika for execution tracking. Auto-detects execution parameters from Codika Init node.',
+			'Submit workflow results, report errors, or upload files to Codika. Auto-detects execution parameters from Codika Init node.',
 		defaults: {
 			name: 'Codika Event',
 		},
@@ -37,6 +38,8 @@ export class CodikaEvent implements INodeType {
 				return executeSubmitResult.call(this);
 			case 'reportError':
 				return executeReportError.call(this);
+			case 'uploadFile':
+				return executeUploadFile.call(this);
 			default:
 				throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
 		}

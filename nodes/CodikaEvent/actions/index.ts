@@ -1,6 +1,7 @@
 import type { INodeProperties } from 'n8n-workflow';
 import { submitResultDescription } from './submitResult.operation';
 import { reportErrorDescription } from './reportError.operation';
+import { uploadFileDescription } from './uploadFile.operation';
 
 /**
  * Display options for Workflow Outputs resource
@@ -8,6 +9,15 @@ import { reportErrorDescription } from './reportError.operation';
 const workflowOutputsDisplayOptions = {
 	show: {
 		resource: ['workflowOutputs'],
+	},
+};
+
+/**
+ * Display options for File Management resource
+ */
+const fileManagementDisplayOptions = {
+	show: {
+		resource: ['fileManagement'],
 	},
 };
 
@@ -25,6 +35,11 @@ const resourceParams: INodeProperties[] = [
 				name: 'Workflow Output',
 				value: 'workflowOutputs',
 				description: 'Submit workflow results or report errors',
+			},
+			{
+				name: 'File Management',
+				value: 'fileManagement',
+				description: 'Upload files to Codika knowledge base',
 			},
 		],
 		default: 'workflowOutputs',
@@ -51,12 +66,28 @@ const resourceParams: INodeProperties[] = [
 		],
 		default: 'submitResult',
 	},
+	{
+		displayName: 'Operation',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: fileManagementDisplayOptions,
+		options: [
+			{
+				name: 'Upload File',
+				value: 'uploadFile',
+				action: 'Upload file',
+				description: 'Upload a file to Codika knowledge base',
+			},
+		],
+		default: 'uploadFile',
+	},
 ];
 
 /**
  * Shared parameters for all Workflow Outputs operations
  */
-const sharedParams: INodeProperties[] = [
+const workflowOutputsSharedParams: INodeProperties[] = [
 	{
 		displayName: 'Auto-Detection',
 		name: 'autoDetectNotice',
@@ -100,11 +131,59 @@ const sharedParams: INodeProperties[] = [
 ];
 
 /**
+ * Shared parameters for all File Management operations
+ */
+const fileManagementSharedParams: INodeProperties[] = [
+	{
+		displayName: 'Auto-Detection',
+		name: 'autoDetectNotice',
+		type: 'notice',
+		default: '',
+		displayOptions: fileManagementDisplayOptions,
+		description:
+			'Execution parameters are auto-populated from the "Codika Init" node if present. You only need to configure the file-specific fields.',
+	},
+	{
+		displayName: 'Execution ID',
+		name: 'executionId',
+		type: 'string',
+		default: '',
+		displayOptions: fileManagementDisplayOptions,
+		placeholder: 'Auto-detected from Codika Init node',
+		description:
+			'Leave empty to auto-detect. Manual override: ={{ $("Codika Init").first().JSON.executionId }}.',
+	},
+	{
+		displayName: 'Execution Secret',
+		name: 'executionSecret',
+		type: 'string',
+		typeOptions: { password: true },
+		default: '',
+		displayOptions: fileManagementDisplayOptions,
+		placeholder: 'Auto-detected from Codika Init node',
+		description:
+			'Leave empty to auto-detect. Manual override: ={{ $("Codika Init").first().JSON.executionSecret }}.',
+	},
+	{
+		displayName: 'Start Time (Ms)',
+		name: 'startTimeMs',
+		type: 'number',
+		default: 0,
+		displayOptions: fileManagementDisplayOptions,
+		placeholder: 'Auto-detected from Codika Init node',
+		description:
+			'Leave as 0 to auto-detect. Used for tracking. Manual override: ={{ $("Codika Init").first().JSON._startTimeMs }}.',
+	},
+];
+
+/**
  * Combined descriptions for all resources and operations
  */
 export const descriptions: INodeProperties[] = [
 	...resourceParams,
-	...sharedParams,
+	...workflowOutputsSharedParams,
+	...fileManagementSharedParams,
 	...submitResultDescription,
 	...reportErrorDescription,
+	...uploadFileDescription,
 ];

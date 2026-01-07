@@ -3,9 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.descriptions = void 0;
 const submitResult_operation_1 = require("./submitResult.operation");
 const reportError_operation_1 = require("./reportError.operation");
+const uploadFile_operation_1 = require("./uploadFile.operation");
 const workflowOutputsDisplayOptions = {
     show: {
         resource: ['workflowOutputs'],
+    },
+};
+const fileManagementDisplayOptions = {
+    show: {
+        resource: ['fileManagement'],
     },
 };
 const resourceParams = [
@@ -19,6 +25,11 @@ const resourceParams = [
                 name: 'Workflow Output',
                 value: 'workflowOutputs',
                 description: 'Submit workflow results or report errors',
+            },
+            {
+                name: 'File Management',
+                value: 'fileManagement',
+                description: 'Upload files to Codika knowledge base',
             },
         ],
         default: 'workflowOutputs',
@@ -45,8 +56,24 @@ const resourceParams = [
         ],
         default: 'submitResult',
     },
+    {
+        displayName: 'Operation',
+        name: 'operation',
+        type: 'options',
+        noDataExpression: true,
+        displayOptions: fileManagementDisplayOptions,
+        options: [
+            {
+                name: 'Upload File',
+                value: 'uploadFile',
+                action: 'Upload file',
+                description: 'Upload a file to Codika knowledge base',
+            },
+        ],
+        default: 'uploadFile',
+    },
 ];
-const sharedParams = [
+const workflowOutputsSharedParams = [
     {
         displayName: 'Auto-Detection',
         name: 'autoDetectNotice',
@@ -84,10 +111,50 @@ const sharedParams = [
         description: 'Leave as 0 to auto-detect. Used for execution duration calculation. Manual override: ={{ $("Codika Init").first().JSON._startTimeMs }}.',
     },
 ];
+const fileManagementSharedParams = [
+    {
+        displayName: 'Auto-Detection',
+        name: 'autoDetectNotice',
+        type: 'notice',
+        default: '',
+        displayOptions: fileManagementDisplayOptions,
+        description: 'Execution parameters are auto-populated from the "Codika Init" node if present. You only need to configure the file-specific fields.',
+    },
+    {
+        displayName: 'Execution ID',
+        name: 'executionId',
+        type: 'string',
+        default: '',
+        displayOptions: fileManagementDisplayOptions,
+        placeholder: 'Auto-detected from Codika Init node',
+        description: 'Leave empty to auto-detect. Manual override: ={{ $("Codika Init").first().JSON.executionId }}.',
+    },
+    {
+        displayName: 'Execution Secret',
+        name: 'executionSecret',
+        type: 'string',
+        typeOptions: { password: true },
+        default: '',
+        displayOptions: fileManagementDisplayOptions,
+        placeholder: 'Auto-detected from Codika Init node',
+        description: 'Leave empty to auto-detect. Manual override: ={{ $("Codika Init").first().JSON.executionSecret }}.',
+    },
+    {
+        displayName: 'Start Time (Ms)',
+        name: 'startTimeMs',
+        type: 'number',
+        default: 0,
+        displayOptions: fileManagementDisplayOptions,
+        placeholder: 'Auto-detected from Codika Init node',
+        description: 'Leave as 0 to auto-detect. Used for tracking. Manual override: ={{ $("Codika Init").first().JSON._startTimeMs }}.',
+    },
+];
 exports.descriptions = [
     ...resourceParams,
-    ...sharedParams,
+    ...workflowOutputsSharedParams,
+    ...fileManagementSharedParams,
     ...submitResult_operation_1.submitResultDescription,
     ...reportError_operation_1.reportErrorDescription,
+    ...uploadFile_operation_1.uploadFileDescription,
 ];
 //# sourceMappingURL=index.js.map

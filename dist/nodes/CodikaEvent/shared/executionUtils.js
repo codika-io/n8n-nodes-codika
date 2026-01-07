@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CODIKA_API_URL = void 0;
+exports.CODIKA_UPLOAD_URL = exports.CODIKA_API_URL = void 0;
 exports.tryGetInitNodeData = tryGetInitNodeData;
 exports.validateExecutionParams = validateExecutionParams;
 exports.resolveExecutionParams = resolveExecutionParams;
 exports.makeCodikaApiRequest = makeCodikaApiRequest;
 const n8n_workflow_1 = require("n8n-workflow");
 exports.CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
+exports.CODIKA_UPLOAD_URL = `${exports.CODIKA_API_URL}/uploadWorkflowOutput`;
 function tryGetInitNodeData(context) {
     try {
         const expression = "$('Codika Init').first().json";

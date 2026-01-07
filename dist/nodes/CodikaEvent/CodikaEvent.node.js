@@ -5,6 +5,7 @@ const n8n_workflow_1 = require("n8n-workflow");
 const actions_1 = require("./actions");
 const submitResult_operation_1 = require("./actions/submitResult.operation");
 const reportError_operation_1 = require("./actions/reportError.operation");
+const uploadFile_operation_1 = require("./actions/uploadFile.operation");
 class CodikaEvent {
     constructor() {
         this.description = {
@@ -14,7 +15,7 @@ class CodikaEvent {
             group: ['transform'],
             version: 1,
             subtitle: '={{ $parameter["operation"] }}',
-            description: 'Submit workflow results or report errors to Codika for execution tracking. Auto-detects execution parameters from Codika Init node.',
+            description: 'Submit workflow results, report errors, or upload files to Codika. Auto-detects execution parameters from Codika Init node.',
             defaults: {
                 name: 'Codika Event',
             },
@@ -31,6 +32,8 @@ class CodikaEvent {
                 return submitResult_operation_1.executeSubmitResult.call(this);
             case 'reportError':
                 return reportError_operation_1.executeReportError.call(this);
+            case 'uploadFile':
+                return uploadFile_operation_1.executeUploadFile.call(this);
             default:
                 throw new n8n_workflow_1.NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
         }
