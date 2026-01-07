@@ -75,30 +75,11 @@ export function validateExecutionParams(
 	if (!executionId || !executionSecret) {
 		throw new NodeOperationError(
 			context.getNode(),
-			'Missing executionId or executionSecret.\n\n' +
-				'To fix this, either:\n' +
-				'1. Add a "Codika" node with "Init Workflow" operation earlier in your workflow (recommended), OR\n' +
-				'2. Manually configure executionId and executionSecret parameters.\n\n' +
-				'Note: The Init node must be named exactly "Codika" for auto-detection to work.',
+			'Missing execution context: executionId or executionSecret not found.\n\n' +
+				'This operation requires a "Codika > Init Workflow" node earlier in your workflow.\n' +
+				'The Init Workflow node extracts these values from the webhook payload and stores them in the execution context.',
 		);
 	}
-}
-
-/**
- * Resolves execution parameters from auto-detection and manual inputs.
- * Manual values take precedence if provided.
- */
-export function resolveExecutionParams(
-	autoData: ExecutionData | null,
-	manualExecutionId: string,
-	manualExecutionSecret: string,
-	manualStartTimeMs: number,
-): { executionId: string; executionSecret: string; startTimeMs: number } {
-	return {
-		executionId: manualExecutionId || autoData?.executionId || '',
-		executionSecret: manualExecutionSecret || autoData?.executionSecret || '',
-		startTimeMs: manualStartTimeMs > 0 ? manualStartTimeMs : autoData?.startTimeMs || 0,
-	};
 }
 
 /**

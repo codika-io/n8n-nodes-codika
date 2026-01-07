@@ -195,41 +195,13 @@ const resourceParams: INodeProperties[] = [
  */
 const workflowOutputsSharedParams: INodeProperties[] = [
 	{
-		displayName: 'Auto-Detection',
-		name: 'autoDetectNotice',
+		displayName:
+			'This operation requires a <strong>Codika node with "Init Workflow" operation</strong> earlier in your workflow. ' +
+			'That operation captures the execution ID and secret from the webhook payload, which are needed here to submit results back to Codika.',
+		name: 'requiresInitNotice',
 		type: 'notice',
 		default: '',
 		displayOptions: workflowOutputsDisplayOptions,
-		description:
-			'Execution parameters (ID, secret, start time) are auto-populated from the "Codika (Init Workflow)" operation if present. You only need to configure the operation-specific fields.',
-	},
-	{
-		displayName: 'Execution ID',
-		name: 'executionId',
-		type: 'string',
-		default: '',
-		displayOptions: workflowOutputsDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave empty to auto-detect. Manual override: ={{ $("Codika").first().JSON.executionId }}.',
-	},
-	{
-		displayName: 'Execution Secret',
-		name: 'executionSecret',
-		type: 'string',
-		typeOptions: { password: true },
-		default: '',
-		displayOptions: workflowOutputsDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave empty to auto-detect. Manual override: ={{ $("Codika").first().JSON.executionSecret }}.',
-	},
-	{
-		displayName: 'Start Time (Ms)',
-		name: 'startTimeMs',
-		type: 'number',
-		default: 0,
-		displayOptions: workflowOutputsDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave as 0 to auto-detect. Used for execution duration calculation. Manual override: ={{ $("Codika").first().JSON._startTimeMs }}.',
 	},
 ];
 
@@ -238,41 +210,13 @@ const workflowOutputsSharedParams: INodeProperties[] = [
  */
 const fileManagementSharedParams: INodeProperties[] = [
 	{
-		displayName: 'Auto-Detection',
-		name: 'autoDetectNotice',
+		displayName:
+			'This operation requires a <strong>Codika node with "Init Workflow" operation</strong> earlier in your workflow. ' +
+			'That operation captures the execution ID and secret from the webhook payload, which are needed here to upload files.',
+		name: 'requiresInitNotice',
 		type: 'notice',
 		default: '',
 		displayOptions: fileManagementDisplayOptions,
-		description:
-			'Execution parameters are auto-populated from the "Codika (Init Workflow)" operation if present. You only need to configure the file-specific fields.',
-	},
-	{
-		displayName: 'Execution ID',
-		name: 'executionId',
-		type: 'string',
-		default: '',
-		displayOptions: fileManagementDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave empty to auto-detect. Manual override: ={{ $("Codika").first().JSON.executionId }}.',
-	},
-	{
-		displayName: 'Execution Secret',
-		name: 'executionSecret',
-		type: 'string',
-		typeOptions: { password: true },
-		default: '',
-		displayOptions: fileManagementDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave empty to auto-detect. Manual override: ={{ $("Codika").first().JSON.executionSecret }}.',
-	},
-	{
-		displayName: 'Start Time (Ms)',
-		name: 'startTimeMs',
-		type: 'number',
-		default: 0,
-		displayOptions: fileManagementDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave as 0 to auto-detect. Used for tracking. Manual override: ={{ $("Codika").first().JSON._startTimeMs }}.',
 	},
 ];
 
@@ -281,40 +225,13 @@ const fileManagementSharedParams: INodeProperties[] = [
  */
 const errorHandlingSharedParams: INodeProperties[] = [
 	{
-		displayName: 'Auto-Detection',
-		name: 'autoDetectNotice',
+		displayName:
+			'This operation requires a <strong>Codika node with "Init Workflow" operation</strong> earlier in your workflow. ' +
+			'That operation captures the execution ID and secret from the webhook payload, which are needed here to report errors back to Codika.',
+		name: 'requiresInitNotice',
 		type: 'notice',
 		default: '',
 		displayOptions: errorHandlingDisplayOptions,
-		description: 'Execution parameters are auto-populated from the "Codika (Init Workflow)" operation if present',
-	},
-	{
-		displayName: 'Execution ID',
-		name: 'executionId',
-		type: 'string',
-		default: '',
-		displayOptions: errorHandlingDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave empty to auto-detect',
-	},
-	{
-		displayName: 'Execution Secret',
-		name: 'executionSecret',
-		type: 'string',
-		typeOptions: { password: true },
-		default: '',
-		displayOptions: errorHandlingDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave empty to auto-detect',
-	},
-	{
-		displayName: 'Start Time (Ms)',
-		name: 'startTimeMs',
-		type: 'number',
-		default: 0,
-		displayOptions: errorHandlingDisplayOptions,
-		placeholder: 'Auto-detected from Init operation',
-		description: 'Leave as 0 to auto-detect',
 	},
 ];
 

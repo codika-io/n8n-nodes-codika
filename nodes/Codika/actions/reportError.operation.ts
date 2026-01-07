@@ -3,13 +3,12 @@ import { NodeOperationError } from 'n8n-workflow';
 import {
 	tryGetInitNodeData,
 	validateExecutionParams,
-	resolveExecutionParams,
 	makeCodikaApiRequest,
 } from '../shared/executionUtils';
 
 const displayOptions = {
 	show: {
-		resource: ['workflowOutputs'],
+		resource: ['errorHandling'],
 		operation: ['reportError'],
 	},
 };
@@ -81,27 +80,21 @@ export async function executeReportError(
 ): Promise<INodeExecutionData[][]> {
 	const returnData: INodeExecutionData[] = [];
 
-	// Try auto-detection from Init node first
+	// Get execution context from Init Workflow node
 	const autoData = tryGetInitNodeData(this);
 
-	// Get manual parameter values (may be empty if relying on auto-detection)
-	const manualExecutionId = this.getNodeParameter('executionId', 0, '') as string;
-	const manualExecutionSecret = this.getNodeParameter('executionSecret', 0, '') as string;
+	// Get user-configurable parameters
 	const errorMessage = this.getNodeParameter('errorMessage', 0) as string;
 	const errorType = this.getNodeParameter('errorType', 0) as string;
 	const failedNodeName = this.getNodeParameter('failedNodeName', 0, '') as string;
 	const lastExecutedNode = this.getNodeParameter('lastExecutedNode', 0, '') as string;
-	const manualStartTimeMs = this.getNodeParameter('startTimeMs', 0, 0) as number;
 
-	// Resolve final values
-	const { executionId, executionSecret, startTimeMs } = resolveExecutionParams(
-		autoData,
-		manualExecutionId,
-		manualExecutionSecret,
-		manualStartTimeMs,
-	);
+	// Extract values from execution context
+	const executionId = autoData?.executionId || '';
+	const executionSecret = autoData?.executionSecret || '';
+	const startTimeMs = autoData?.startTimeMs || 0;
 
-	// Validate required parameters
+	// Validate required parameters from execution context
 	validateExecutionParams(executionId, executionSecret, this);
 
 	if (!errorMessage) {
@@ -147,7 +140,6 @@ export async function executeReportError(
 				reportedAt: new Date().toISOString(),
 				errorType,
 				executionTimeMs,
-				_autoDetected: !!autoData && !manualExecutionId,
 			},
 		});
 	} catch (error) {

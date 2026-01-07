@@ -6,7 +6,7 @@ const n8n_workflow_1 = require("n8n-workflow");
 const executionUtils_1 = require("../shared/executionUtils");
 const displayOptions = {
     show: {
-        resource: ['workflowOutputs'],
+        resource: ['errorHandling'],
         operation: ['reportError'],
     },
 };
@@ -74,14 +74,13 @@ exports.reportErrorDescription = [
 async function executeReportError() {
     const returnData = [];
     const autoData = (0, executionUtils_1.tryGetInitNodeData)(this);
-    const manualExecutionId = this.getNodeParameter('executionId', 0, '');
-    const manualExecutionSecret = this.getNodeParameter('executionSecret', 0, '');
     const errorMessage = this.getNodeParameter('errorMessage', 0);
     const errorType = this.getNodeParameter('errorType', 0);
     const failedNodeName = this.getNodeParameter('failedNodeName', 0, '');
     const lastExecutedNode = this.getNodeParameter('lastExecutedNode', 0, '');
-    const manualStartTimeMs = this.getNodeParameter('startTimeMs', 0, 0);
-    const { executionId, executionSecret, startTimeMs } = (0, executionUtils_1.resolveExecutionParams)(autoData, manualExecutionId, manualExecutionSecret, manualStartTimeMs);
+    const executionId = (autoData === null || autoData === void 0 ? void 0 : autoData.executionId) || '';
+    const executionSecret = (autoData === null || autoData === void 0 ? void 0 : autoData.executionSecret) || '';
+    const startTimeMs = (autoData === null || autoData === void 0 ? void 0 : autoData.startTimeMs) || 0;
     (0, executionUtils_1.validateExecutionParams)(executionId, executionSecret, this);
     if (!errorMessage) {
         throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Error message is required.');
@@ -114,7 +113,6 @@ async function executeReportError() {
                 reportedAt: new Date().toISOString(),
                 errorType,
                 executionTimeMs,
-                _autoDetected: !!autoData && !manualExecutionId,
             },
         });
     }

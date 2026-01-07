@@ -84,13 +84,13 @@ const displayOptions = {
 
 export const ingestionCallbackDescription: INodeProperties[] = [
 	{
-		displayName: 'Auto-Detection',
-		name: 'autoDetectNotice',
+		displayName:
+			'This operation requires a <strong>Codika node with "Init Data Ingestion" operation</strong> earlier in your workflow. ' +
+			'That operation captures the document ID, callback URL, and embedding secret from the webhook payload, which are needed here to report the ingestion status back to Codika.',
+		name: 'requiresInitNotice',
 		type: 'notice',
 		default: '',
 		displayOptions,
-		description:
-			'Callback parameters (doc_id, callback_url, embedding_secret) are auto-detected from the "Codika (Init Data Ingestion)" operation. Only configure status and extracted_tags.',
 	},
 	{
 		displayName: 'Status',
@@ -101,11 +101,6 @@ export const ingestionCallbackDescription: INodeProperties[] = [
 		displayOptions,
 		options: [
 			{
-				name: 'Success',
-				value: 'success',
-				description: 'Document was successfully embedded',
-			},
-			{
 				name: 'Failed',
 				value: 'failed',
 				description: 'Document embedding failed',
@@ -114,6 +109,11 @@ export const ingestionCallbackDescription: INodeProperties[] = [
 				name: 'Skipped',
 				value: 'skipped',
 				description: 'Document was skipped (duplicate/unchanged)',
+			},
+			{
+				name: 'Success',
+				value: 'success',
+				description: 'Document was successfully embedded',
 			},
 		],
 		description: 'The status of the data ingestion operation',
@@ -158,35 +158,6 @@ export const ingestionCallbackDescription: INodeProperties[] = [
 		placeholder: 'e.g., Failed to generate embeddings',
 		description: 'Error message if ingestion failed',
 	},
-	// Manual override fields
-	{
-		displayName: 'Doc ID',
-		name: 'docId',
-		type: 'string',
-		default: '',
-		displayOptions,
-		placeholder: 'Auto-detected from Init node',
-		description: 'Leave empty to auto-detect. Manual override for document ID.',
-	},
-	{
-		displayName: 'Callback URL',
-		name: 'callbackUrl',
-		type: 'string',
-		default: '',
-		displayOptions,
-		placeholder: 'Auto-detected from Init node',
-		description: 'Leave empty to auto-detect. Manual override for callback URL.',
-	},
-	{
-		displayName: 'Embedding Secret',
-		name: 'embeddingSecret',
-		type: 'string',
-		typeOptions: { password: true },
-		default: '',
-		displayOptions,
-		placeholder: 'Auto-detected from Init node',
-		description: 'Leave empty to auto-detect. Manual override for embedding secret.',
-	},
 ];
 
 export async function executeIngestionCallback(
@@ -194,32 +165,28 @@ export async function executeIngestionCallback(
 ): Promise<INodeExecutionData[][]> {
 	const returnData: INodeExecutionData[] = [];
 
-	// Try auto-detection from Init node first
+	// Get ingestion data from Init Data Ingestion node (via execution context)
 	const autoData = tryGetIngestionData(this);
 
-	// Get manual parameter values
-	const manualDocId = this.getNodeParameter('docId', 0, '') as string;
-	const manualCallbackUrl = this.getNodeParameter('callbackUrl', 0, '') as string;
-	const manualEmbeddingSecret = this.getNodeParameter('embeddingSecret', 0, '') as string;
+	// Get user-configurable parameters
 	const status = this.getNodeParameter('status', 0, 'success') as string;
 	const extractedTagsRaw = this.getNodeParameter('extractedTags', 0, '') as string | string[];
 
-	// Resolve final values (manual takes precedence)
-	const docId = manualDocId || autoData?.docId || '';
-	const callbackUrl = manualCallbackUrl || autoData?.callbackUrl || '';
-	const embeddingSecret = manualEmbeddingSecret || autoData?.embeddingSecret || '';
+	// Extract values from execution context
+	const docId = autoData?.docId || '';
+	const callbackUrl = autoData?.callbackUrl || '';
+	const embeddingSecret = autoData?.embeddingSecret || '';
 	const processId = autoData?.processId || '';
 	const dataIngestionId = autoData?.dataIngestionId || '';
 	const startTimeMs = autoData?.startTimeMs || 0;
 
-	// Validate required parameters
+	// Validate required parameters from execution context
 	if (!docId || !callbackUrl || !embeddingSecret) {
 		throw new NodeOperationError(
 			this.getNode(),
-			'Missing required parameters: doc_id, callback_url, or embedding_secret.\n\n' +
-				'To fix this, either:\n' +
-				'1. Add a "Codika (Init Data Ingestion)" operation earlier in your workflow, OR\n' +
-				'2. Manually configure doc_id, callback_url, and embedding_secret parameters.',
+			'Missing ingestion context: doc_id, callback_url, or embedding_secret not found.\n\n' +
+				'This operation requires a "Codika > Init Data Ingestion" node earlier in your workflow.\n' +
+				'The Init Data Ingestion node extracts these values from the webhook payload and stores them in the execution context.',
 		);
 	}
 
@@ -288,7 +255,6 @@ export async function executeIngestionCallback(
 				extractedTags,
 				executionTimeMs,
 				callbackResponse: response,
-				_autoDetected: !!autoData && !manualDocId,
 			},
 		});
 	} catch (error) {

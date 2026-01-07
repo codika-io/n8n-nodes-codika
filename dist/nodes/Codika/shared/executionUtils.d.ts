@@ -8,9 +8,4 @@ export interface ExecutionData {
 }
 export declare function tryGetInitNodeData(context: IExecuteFunctions, itemIndex?: number): ExecutionData | null;
 export declare function validateExecutionParams(executionId: string, executionSecret: string, context: IExecuteFunctions): void;
-export declare function resolveExecutionParams(autoData: ExecutionData | null, manualExecutionId: string, manualExecutionSecret: string, manualStartTimeMs: number): {
-    executionId: string;
-    executionSecret: string;
-    startTimeMs: number;
-};
 export declare function makeCodikaApiRequest(context: IExecuteFunctions, endpoint: string, body: Record<string, unknown>): Promise<Record<string, unknown>>;

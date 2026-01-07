@@ -76,15 +76,13 @@ async function executeUploadFile() {
     const items = this.getInputData();
     for (let i = 0; i < items.length; i++) {
         const autoData = (0, executionUtils_1.tryGetInitNodeData)(this);
-        const manualExecutionId = this.getNodeParameter('executionId', i, '');
-        const manualExecutionSecret = this.getNodeParameter('executionSecret', i, '');
-        const manualStartTimeMs = this.getNodeParameter('startTimeMs', i, 0);
         const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i, 'data');
         const fieldKey = this.getNodeParameter('fieldKey', i, '');
         const fileName = this.getNodeParameter('fileName', i, '');
         const mimeType = this.getNodeParameter('mimeType', i, '');
         const timeout = this.getNodeParameter('timeout', i, 300000);
-        const { executionId, executionSecret } = (0, executionUtils_1.resolveExecutionParams)(autoData, manualExecutionId, manualExecutionSecret, manualStartTimeMs);
+        const executionId = (autoData === null || autoData === void 0 ? void 0 : autoData.executionId) || '';
+        const executionSecret = (autoData === null || autoData === void 0 ? void 0 : autoData.executionSecret) || '';
         (0, executionUtils_1.validateExecutionParams)(executionId, executionSecret, this);
         const binaryData = this.helpers.assertBinaryData(i, binaryPropertyName);
         const buffer = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
@@ -126,7 +124,6 @@ async function executeUploadFile() {
                     fileName: response.fileName,
                     fileSize: response.fileSize,
                     mimeType: response.mimeType,
-                    _autoDetected: !!autoData && !manualExecutionId,
                 },
             });
         }

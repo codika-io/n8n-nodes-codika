@@ -3,7 +3,6 @@ import { NodeOperationError } from 'n8n-workflow';
 import {
 	tryGetInitNodeData,
 	validateExecutionParams,
-	resolveExecutionParams,
 	CODIKA_UPLOAD_URL,
 } from '../shared/executionUtils';
 
@@ -106,28 +105,21 @@ export async function executeUploadFile(
 	const items = this.getInputData();
 
 	for (let i = 0; i < items.length; i++) {
-		// Try auto-detection from Init node first
+		// Get execution context from Init Workflow node
 		const autoData = tryGetInitNodeData(this);
 
-		// Get manual parameter values (may be empty if relying on auto-detection)
-		const manualExecutionId = this.getNodeParameter('executionId', i, '') as string;
-		const manualExecutionSecret = this.getNodeParameter('executionSecret', i, '') as string;
-		const manualStartTimeMs = this.getNodeParameter('startTimeMs', i, 0) as number;
+		// Get user-configurable parameters
 		const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i, 'data') as string;
 		const fieldKey = this.getNodeParameter('fieldKey', i, '') as string;
 		const fileName = this.getNodeParameter('fileName', i, '') as string;
 		const mimeType = this.getNodeParameter('mimeType', i, '') as string;
 		const timeout = this.getNodeParameter('timeout', i, 300000) as number;
 
-		// Resolve final values
-		const { executionId, executionSecret } = resolveExecutionParams(
-			autoData,
-			manualExecutionId,
-			manualExecutionSecret,
-			manualStartTimeMs,
-		);
+		// Extract values from execution context
+		const executionId = autoData?.executionId || '';
+		const executionSecret = autoData?.executionSecret || '';
 
-		// Validate required parameters
+		// Validate required parameters from execution context
 		validateExecutionParams(executionId, executionSecret, this);
 
 		// Get binary data
@@ -189,7 +181,6 @@ export async function executeUploadFile(
 					fileName: response.fileName,
 					fileSize: response.fileSize,
 					mimeType: response.mimeType,
-					_autoDetected: !!autoData && !manualExecutionId,
 				},
 			});
 		} catch (error) {

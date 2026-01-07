@@ -37,14 +37,6 @@ const displayOptions = {
 };
 exports.initWorkflowDescription = [
     {
-        displayName: 'Mode Detection',
-        name: 'modeNotice',
-        type: 'notice',
-        default: '',
-        displayOptions,
-        description: 'This operation auto-detects the trigger type. For HTTP triggers (from Codika UI), it extracts execution metadata from the payload (passthrough mode). For other triggers (schedule, Gmail, etc.), it creates a new execution via API using the parameters below.',
-    },
-    {
         displayName: 'Member Secret',
         name: 'memberSecret',
         type: 'string',

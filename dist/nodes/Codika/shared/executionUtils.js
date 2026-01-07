@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CODIKA_UPLOAD_URL = exports.CODIKA_API_URL = void 0;
 exports.tryGetInitNodeData = tryGetInitNodeData;
 exports.validateExecutionParams = validateExecutionParams;
-exports.resolveExecutionParams = resolveExecutionParams;
 exports.makeCodikaApiRequest = makeCodikaApiRequest;
 const n8n_workflow_1 = require("n8n-workflow");
 exports.CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
@@ -48,19 +47,10 @@ function tryGetInitNodeData(context, itemIndex = 0) {
 }
 function validateExecutionParams(executionId, executionSecret, context) {
     if (!executionId || !executionSecret) {
-        throw new n8n_workflow_1.NodeOperationError(context.getNode(), 'Missing executionId or executionSecret.\n\n' +
-            'To fix this, either:\n' +
-            '1. Add a "Codika" node with "Init Workflow" operation earlier in your workflow (recommended), OR\n' +
-            '2. Manually configure executionId and executionSecret parameters.\n\n' +
-            'Note: The Init node must be named exactly "Codika" for auto-detection to work.');
+        throw new n8n_workflow_1.NodeOperationError(context.getNode(), 'Missing execution context: executionId or executionSecret not found.\n\n' +
+            'This operation requires a "Codika > Init Workflow" node earlier in your workflow.\n' +
+            'The Init Workflow node extracts these values from the webhook payload and stores them in the execution context.');
     }
-}
-function resolveExecutionParams(autoData, manualExecutionId, manualExecutionSecret, manualStartTimeMs) {
-    return {
-        executionId: manualExecutionId || (autoData === null || autoData === void 0 ? void 0 : autoData.executionId) || '',
-        executionSecret: manualExecutionSecret || (autoData === null || autoData === void 0 ? void 0 : autoData.executionSecret) || '',
-        startTimeMs: manualStartTimeMs > 0 ? manualStartTimeMs : (autoData === null || autoData === void 0 ? void 0 : autoData.startTimeMs) || 0,
-    };
 }
 async function makeCodikaApiRequest(context, endpoint, body) {
     const options = {
