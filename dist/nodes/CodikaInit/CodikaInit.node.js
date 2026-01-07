@@ -120,6 +120,16 @@ class CodikaInit {
                     _mode: 'passthrough',
                 },
             });
+            try {
+                const executionContext = this.getWorkflowDataProxy(0).$execution;
+                if (executionContext === null || executionContext === void 0 ? void 0 : executionContext.customData) {
+                    executionContext.customData.set('codikaExecutionId', httpTriggerMetadata.executionId);
+                    executionContext.customData.set('codikaExecutionSecret', httpTriggerMetadata.executionSecret);
+                    executionContext.customData.set('codikaStartTimeMs', String(startTimeMs));
+                }
+            }
+            catch {
+            }
             return [returnData];
         }
         const memberSecret = this.getNodeParameter('memberSecret', 0, '');
@@ -181,6 +191,16 @@ class CodikaInit {
                     _mode: 'create',
                 },
             });
+            try {
+                const executionContext = this.getWorkflowDataProxy(0).$execution;
+                if (executionContext === null || executionContext === void 0 ? void 0 : executionContext.customData) {
+                    executionContext.customData.set('codikaExecutionId', response.executionId);
+                    executionContext.customData.set('codikaExecutionSecret', response.executionSecret);
+                    executionContext.customData.set('codikaStartTimeMs', String(startTimeMs));
+                }
+            }
+            catch {
+            }
         }
         catch (error) {
             if (error instanceof n8n_workflow_1.NodeOperationError) {

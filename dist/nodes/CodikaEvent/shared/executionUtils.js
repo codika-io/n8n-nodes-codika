@@ -8,10 +8,29 @@ exports.makeCodikaApiRequest = makeCodikaApiRequest;
 const n8n_workflow_1 = require("n8n-workflow");
 exports.CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
 exports.CODIKA_UPLOAD_URL = `${exports.CODIKA_API_URL}/uploadWorkflowOutput`;
-function tryGetInitNodeData(context) {
+function tryGetInitNodeData(context, itemIndex = 0) {
+    var _a;
+    try {
+        const proxy = context.getWorkflowDataProxy(itemIndex);
+        const customData = (_a = proxy.$execution) === null || _a === void 0 ? void 0 : _a.customData;
+        if (customData) {
+            const executionId = customData.get('codikaExecutionId');
+            const executionSecret = customData.get('codikaExecutionSecret');
+            const startTimeMs = customData.get('codikaStartTimeMs');
+            if (executionId && executionSecret) {
+                return {
+                    executionId,
+                    executionSecret,
+                    startTimeMs: startTimeMs ? parseInt(startTimeMs, 10) : 0,
+                };
+            }
+        }
+    }
+    catch {
+    }
     try {
         const expression = "$('Codika Init').first().json";
-        const result = context.evaluateExpression(expression, 0);
+        const result = context.evaluateExpression(expression, itemIndex);
         if ((result === null || result === void 0 ? void 0 : result.executionId) && (result === null || result === void 0 ? void 0 : result.executionSecret)) {
             return {
                 executionId: result.executionId,

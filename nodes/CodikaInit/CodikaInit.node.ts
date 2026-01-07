@@ -161,6 +161,18 @@ export class CodikaInit implements INodeType {
 				},
 			});
 
+			// Store in execution context for downstream nodes (works across all node types)
+			try {
+				const executionContext = this.getWorkflowDataProxy(0).$execution;
+				if (executionContext?.customData) {
+					executionContext.customData.set('codikaExecutionId', httpTriggerMetadata.executionId);
+					executionContext.customData.set('codikaExecutionSecret', httpTriggerMetadata.executionSecret);
+					executionContext.customData.set('codikaStartTimeMs', String(startTimeMs));
+				}
+			} catch {
+				// Execution context not available - will fall back to expression evaluation
+			}
+
 			return [returnData];
 		}
 
@@ -249,6 +261,18 @@ export class CodikaInit implements INodeType {
 					_mode: 'create',
 				},
 			});
+
+			// Store in execution context for downstream nodes (works across all node types)
+			try {
+				const executionContext = this.getWorkflowDataProxy(0).$execution;
+				if (executionContext?.customData) {
+					executionContext.customData.set('codikaExecutionId', response.executionId as string);
+					executionContext.customData.set('codikaExecutionSecret', response.executionSecret as string);
+					executionContext.customData.set('codikaStartTimeMs', String(startTimeMs));
+				}
+			} catch {
+				// Execution context not available - will fall back to expression evaluation
+			}
 		} catch (error) {
 			// If it's already a NodeOperationError, re-throw it
 			if (error instanceof NodeOperationError) {

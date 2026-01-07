@@ -6,7 +6,7 @@ export interface ExecutionData {
     executionSecret: string;
     startTimeMs: number;
 }
-export declare function tryGetInitNodeData(context: IExecuteFunctions): ExecutionData | null;
+export declare function tryGetInitNodeData(context: IExecuteFunctions, itemIndex?: number): ExecutionData | null;
 export declare function validateExecutionParams(executionId: string, executionSecret: string, context: IExecuteFunctions): void;
 export declare function resolveExecutionParams(autoData: ExecutionData | null, manualExecutionId: string, manualExecutionSecret: string, manualStartTimeMs: number): {
     executionId: string;
