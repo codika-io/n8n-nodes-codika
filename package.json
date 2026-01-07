@@ -32,7 +32,9 @@
         "strict": true,
         "credentials": [],
         "nodes": [
-            "dist/nodes/CodikaExecutionInit/CodikaExecutionInit.node.js"
+            "dist/nodes/CodikaExecutionInit/CodikaExecutionInit.node.js",
+            "dist/nodes/CodikaWorkflowResult/CodikaWorkflowResult.node.js",
+            "dist/nodes/CodikaWorkflowError/CodikaWorkflowError.node.js"
         ]
     },
     "devDependencies": {
