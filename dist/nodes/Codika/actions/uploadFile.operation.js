@@ -70,6 +70,24 @@ exports.uploadFileDescription = [
         displayOptions,
         description: 'Request timeout in milliseconds (default 5 minutes for large files)',
     },
+    {
+        displayName: 'Execution ID (Override)',
+        name: 'executionIdOverride',
+        type: 'string',
+        default: '',
+        displayOptions,
+        placeholder: '={{ $json.executionId }}',
+        description: 'Override auto-detected executionId (for use in subworkflows where executionId is passed as input)',
+    },
+    {
+        displayName: 'Execution Secret (Override)',
+        name: 'executionSecretOverride',
+        type: 'string',
+        default: '',
+        displayOptions,
+        placeholder: '={{ $json.executionSecret }}',
+        description: 'Override auto-detected executionSecret (for use in subworkflows where executionSecret is passed as input)',
+    },
 ];
 async function executeUploadFile() {
     const returnData = [];
@@ -81,8 +99,10 @@ async function executeUploadFile() {
         const fileName = this.getNodeParameter('fileName', i, '');
         const mimeType = this.getNodeParameter('mimeType', i, '');
         const timeout = this.getNodeParameter('timeout', i, 300000);
-        const executionId = (autoData === null || autoData === void 0 ? void 0 : autoData.executionId) || '';
-        const executionSecret = (autoData === null || autoData === void 0 ? void 0 : autoData.executionSecret) || '';
+        const executionIdOverride = this.getNodeParameter('executionIdOverride', i, '');
+        const executionSecretOverride = this.getNodeParameter('executionSecretOverride', i, '');
+        const executionId = executionIdOverride || (autoData === null || autoData === void 0 ? void 0 : autoData.executionId) || '';
+        const executionSecret = executionSecretOverride || (autoData === null || autoData === void 0 ? void 0 : autoData.executionSecret) || '';
         (0, executionUtils_1.validateExecutionParams)(executionId, executionSecret, this);
         const binaryData = this.helpers.assertBinaryData(i, binaryPropertyName);
         const buffer = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);

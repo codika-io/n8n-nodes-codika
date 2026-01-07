@@ -96,6 +96,24 @@ export const uploadFileDescription: INodeProperties[] = [
 		displayOptions,
 		description: 'Request timeout in milliseconds (default 5 minutes for large files)',
 	},
+	{
+		displayName: 'Execution ID (Override)',
+		name: 'executionIdOverride',
+		type: 'string',
+		default: '',
+		displayOptions,
+		placeholder: '={{ $json.executionId }}',
+		description: 'Override auto-detected executionId (for use in subworkflows where executionId is passed as input)',
+	},
+	{
+		displayName: 'Execution Secret (Override)',
+		name: 'executionSecretOverride',
+		type: 'string',
+		default: '',
+		displayOptions,
+		placeholder: '={{ $json.executionSecret }}',
+		description: 'Override auto-detected executionSecret (for use in subworkflows where executionSecret is passed as input)',
+	},
 ];
 
 export async function executeUploadFile(
@@ -115,9 +133,13 @@ export async function executeUploadFile(
 		const mimeType = this.getNodeParameter('mimeType', i, '') as string;
 		const timeout = this.getNodeParameter('timeout', i, 300000) as number;
 
-		// Extract values from execution context
-		const executionId = autoData?.executionId || '';
-		const executionSecret = autoData?.executionSecret || '';
+		// Get optional overrides (for subworkflow usage)
+		const executionIdOverride = this.getNodeParameter('executionIdOverride', i, '') as string;
+		const executionSecretOverride = this.getNodeParameter('executionSecretOverride', i, '') as string;
+
+		// Priority: explicit overrides > auto-detection from execution context
+		const executionId = executionIdOverride || autoData?.executionId || '';
+		const executionSecret = executionSecretOverride || autoData?.executionSecret || '';
 
 		// Validate required parameters from execution context
 		validateExecutionParams(executionId, executionSecret, this);
