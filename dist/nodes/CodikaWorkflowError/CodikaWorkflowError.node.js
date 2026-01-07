@@ -3,6 +3,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CodikaWorkflowError = void 0;
 const n8n_workflow_1 = require("n8n-workflow");
 const CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
+function tryGetInitNodeData(context) {
+    try {
+        const expression = "$('Codika Execution Init').first().json";
+        const result = context.evaluateExpression(expression, 0);
+        if ((result === null || result === void 0 ? void 0 : result.executionId) && (result === null || result === void 0 ? void 0 : result.executionSecret)) {
+            return {
+                executionId: result.executionId,
+                executionSecret: result.executionSecret,
+                startTimeMs: result._startTimeMs || 0,
+            };
+        }
+    }
+    catch {
+    }
+    return null;
+}
 class CodikaWorkflowError {
     constructor() {
         this.description = {
@@ -12,31 +28,37 @@ class CodikaWorkflowError {
             group: ['transform'],
             version: 1,
             subtitle: 'Report workflow error',
-            description: 'Report a workflow error to Codika for execution tracking',
+            description: 'Report a workflow error to Codika for execution tracking. Auto-detects execution parameters from Codika Execution Init node.',
             defaults: {
                 name: 'Codika Workflow Error',
             },
             inputs: [n8n_workflow_1.NodeConnectionTypes.Main],
             outputs: [n8n_workflow_1.NodeConnectionTypes.Main],
+            usableAsTool: true,
             properties: [
+                {
+                    displayName: 'Auto-Detection',
+                    name: 'autoDetectNotice',
+                    type: 'notice',
+                    default: '',
+                    description: 'Execution parameters (ID, secret, start time) are auto-populated from the "Codika Execution Init" node if present. You only need to configure error details.',
+                },
                 {
                     displayName: 'Execution ID',
                     name: 'executionId',
                     type: 'string',
-                    required: true,
                     default: '',
-                    placeholder: "={{ $('Codika Execution Init').first().json.executionId }}",
-                    description: 'The execution ID from Codika Execution Init node',
+                    placeholder: 'Auto-detected from Codika Execution Init node',
+                    description: 'Leave empty to auto-detect. Manual override: ={{ $("Codika Execution Init").first().JSON.executionId }}.',
                 },
                 {
                     displayName: 'Execution Secret',
                     name: 'executionSecret',
                     type: 'string',
-                    required: true,
                     typeOptions: { password: true },
                     default: '',
-                    placeholder: "={{ $('Codika Execution Init').first().json.executionSecret }}",
-                    description: 'The execution secret from Codika Execution Init node',
+                    placeholder: 'Auto-detected from Codika Execution Init node',
+                    description: 'Leave empty to auto-detect. Manual override: ={{ $("Codika Execution Init").first().JSON.executionSecret }}.',
                 },
                 {
                     displayName: 'Error Message',
@@ -81,7 +103,6 @@ class CodikaWorkflowError {
                     displayName: 'Failed Node Name',
                     name: 'failedNodeName',
                     type: 'string',
-                    required: false,
                     default: '',
                     placeholder: 'e.g., Gmail Trigger',
                     description: 'Name of the node that caused the failure (optional)',
@@ -90,34 +111,40 @@ class CodikaWorkflowError {
                     displayName: 'Last Executed Node',
                     name: 'lastExecutedNode',
                     type: 'string',
-                    required: false,
                     default: '',
                     placeholder: 'e.g., Process Data',
                     description: 'Name of the last successfully executed node (optional)',
                 },
                 {
-                    displayName: 'Start Time (ms)',
+                    displayName: 'Start Time (Ms)',
                     name: 'startTimeMs',
                     type: 'number',
-                    required: false,
                     default: 0,
-                    placeholder: "={{ $('Codika Execution Init').first().json._startTimeMs }}",
-                    description: 'Start time in milliseconds for execution duration calculation',
+                    placeholder: 'Auto-detected from Codika Execution Init node',
+                    description: 'Leave as 0 to auto-detect. Used for execution duration calculation. Manual override: ={{ $("Codika Execution Init").first().JSON._startTimeMs }}',
                 },
             ],
         };
     }
     async execute() {
         const returnData = [];
-        const executionId = this.getNodeParameter('executionId', 0);
-        const executionSecret = this.getNodeParameter('executionSecret', 0);
+        const autoData = tryGetInitNodeData(this);
+        const manualExecutionId = this.getNodeParameter('executionId', 0, '');
+        const manualExecutionSecret = this.getNodeParameter('executionSecret', 0, '');
         const errorMessage = this.getNodeParameter('errorMessage', 0);
         const errorType = this.getNodeParameter('errorType', 0);
-        const failedNodeName = this.getNodeParameter('failedNodeName', 0);
-        const lastExecutedNode = this.getNodeParameter('lastExecutedNode', 0);
-        const startTimeMs = this.getNodeParameter('startTimeMs', 0);
+        const failedNodeName = this.getNodeParameter('failedNodeName', 0, '');
+        const lastExecutedNode = this.getNodeParameter('lastExecutedNode', 0, '');
+        const manualStartTimeMs = this.getNodeParameter('startTimeMs', 0, 0);
+        const executionId = manualExecutionId || (autoData === null || autoData === void 0 ? void 0 : autoData.executionId) || '';
+        const executionSecret = manualExecutionSecret || (autoData === null || autoData === void 0 ? void 0 : autoData.executionSecret) || '';
+        const startTimeMs = manualStartTimeMs > 0 ? manualStartTimeMs : (autoData === null || autoData === void 0 ? void 0 : autoData.startTimeMs) || 0;
         if (!executionId || !executionSecret) {
-            throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Missing executionId or executionSecret. Ensure the Codika Execution Init node ran successfully.');
+            throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Missing executionId or executionSecret.\n\n' +
+                'To fix this, either:\n' +
+                '1. Add a "Codika Execution Init" node earlier in your workflow (recommended), OR\n' +
+                '2. Manually configure executionId and executionSecret parameters.\n\n' +
+                'Note: The Init node must be named exactly "Codika Execution Init" for auto-detection to work.');
         }
         if (!errorMessage) {
             throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Error message is required.');
@@ -160,6 +187,7 @@ class CodikaWorkflowError {
                     reportedAt: new Date().toISOString(),
                     errorType,
                     executionTimeMs,
+                    _autoDetected: !!autoData && !manualExecutionId,
                 },
             });
         }
