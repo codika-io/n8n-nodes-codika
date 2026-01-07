@@ -47,7 +47,7 @@ async function executeSubmitResult() {
     const requestBody = {
         executionId,
         executionSecret,
-        result: resultData,
+        resultData,
     };
     if (executionTimeMs !== undefined) {
         requestBody.executionTimeMs = executionTimeMs;

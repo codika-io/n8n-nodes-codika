@@ -74,7 +74,7 @@ export async function executeSubmitResult(
 	const requestBody: Record<string, unknown> = {
 		executionId,
 		executionSecret,
-		result: resultData,
+		resultData,
 	};
 
 	if (executionTimeMs !== undefined) {
