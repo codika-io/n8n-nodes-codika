@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "description": "n8n community nodes for Codika platform integration - workflow execution initialization and callbacks",
     "license": "MIT",
-    "homepage": "",
+    "homepage": "https://github.com/codika-io/n8n-nodes-codika",
     "keywords": [
         "n8n-community-node-package"
     ],
