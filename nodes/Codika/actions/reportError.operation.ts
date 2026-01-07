@@ -104,25 +104,21 @@ export async function executeReportError(
 	// Calculate execution time if start time was provided
 	const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : undefined;
 
-	// Build request body
-	const errorObject: Record<string, unknown> = {
-		message: errorMessage,
-		type: errorType,
-	};
-
-	if (failedNodeName) {
-		errorObject.failedNodeName = failedNodeName;
-	}
-
-	if (lastExecutedNode) {
-		errorObject.lastExecutedNode = lastExecutedNode;
-	}
-
+	// Build request body - API expects flat structure, not nested error object
 	const requestBody: Record<string, unknown> = {
 		executionId,
 		executionSecret,
-		error: errorObject,
+		errorType,
+		errorMessage,
 	};
+
+	if (failedNodeName) {
+		requestBody.failedNodeName = failedNodeName;
+	}
+
+	if (lastExecutedNode) {
+		requestBody.lastExecutedNode = lastExecutedNode;
+	}
 
 	if (executionTimeMs !== undefined) {
 		requestBody.executionTimeMs = executionTimeMs;

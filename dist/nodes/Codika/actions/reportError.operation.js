@@ -86,21 +86,18 @@ async function executeReportError() {
         throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Error message is required.');
     }
     const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : undefined;
-    const errorObject = {
-        message: errorMessage,
-        type: errorType,
-    };
-    if (failedNodeName) {
-        errorObject.failedNodeName = failedNodeName;
-    }
-    if (lastExecutedNode) {
-        errorObject.lastExecutedNode = lastExecutedNode;
-    }
     const requestBody = {
         executionId,
         executionSecret,
-        error: errorObject,
+        errorType,
+        errorMessage,
     };
+    if (failedNodeName) {
+        requestBody.failedNodeName = failedNodeName;
+    }
+    if (lastExecutedNode) {
+        requestBody.lastExecutedNode = lastExecutedNode;
+    }
     if (executionTimeMs !== undefined) {
         requestBody.executionTimeMs = executionTimeMs;
     }
