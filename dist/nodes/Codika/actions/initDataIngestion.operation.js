@@ -32,6 +32,8 @@ function tryExtractIngestionMetadata(inputData) {
         dataIngestionId: data.data_ingestion_id || data.dataIngestionId,
         contextType: data.context_type || data.contextType,
         contextId: data.context_id || data.contextId,
+        processInstanceId: data.process_instance_id || data.processInstanceId,
+        cost: typeof data.cost === 'number' ? data.cost : undefined,
         existingTags: data.existing_tags || data.existingTags,
         availableTags: data.available_tags || data.availableTags,
     };
@@ -76,6 +78,7 @@ exports.initDataIngestionDescription = [
     },
 ];
 async function executeInitDataIngestion() {
+    var _a;
     const items = this.getInputData();
     const returnData = [];
     const startTimeMs = Date.now();
@@ -110,6 +113,8 @@ async function executeInitDataIngestion() {
             dataIngestionId: ingestionMetadata.dataIngestionId || '',
             contextType: ingestionMetadata.contextType || '',
             contextId: ingestionMetadata.contextId || '',
+            processInstanceId: ingestionMetadata.processInstanceId || '',
+            cost: ingestionMetadata.cost,
             existingTags: ingestionMetadata.existingTags || [],
             availableTags: ingestionMetadata.availableTags || ['proposal', 'rfp'],
             _startTimeMs: startTimeMs,
@@ -127,6 +132,9 @@ async function executeInitDataIngestion() {
             executionContext.customData.set('codikaCallbackUrl', ingestionMetadata.callbackUrl || '');
             executionContext.customData.set('codikaEmbeddingSecret', ingestionMetadata.embeddingSecret || '');
             executionContext.customData.set('codikaDataIngestionId', ingestionMetadata.dataIngestionId || '');
+            executionContext.customData.set('codikaProcessInstanceId', ingestionMetadata.processInstanceId || '');
+            executionContext.customData.set('codikaContextType', ingestionMetadata.contextType || '');
+            executionContext.customData.set('codikaCost', String((_a = ingestionMetadata.cost) !== null && _a !== void 0 ? _a : ''));
             executionContext.customData.set('codikaStartTimeMs', String(startTimeMs));
             executionContext.customData.set('codikaHasCallback', hasCallback ? 'true' : 'false');
         }

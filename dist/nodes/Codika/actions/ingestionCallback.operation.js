@@ -15,6 +15,9 @@ function tryGetIngestionData(context, itemIndex = 0) {
             const startTimeMs = customData.get('codikaStartTimeMs');
             const processId = customData.get('codikaProcessId');
             const dataIngestionId = customData.get('codikaDataIngestionId');
+            const processInstanceId = customData.get('codikaProcessInstanceId');
+            const contextType = customData.get('codikaContextType');
+            const cost = customData.get('codikaCost');
             if (docId && callbackUrl && embeddingSecret) {
                 return {
                     docId,
@@ -23,6 +26,9 @@ function tryGetIngestionData(context, itemIndex = 0) {
                     processId: processId || '',
                     dataIngestionId: dataIngestionId || '',
                     startTimeMs: startTimeMs ? parseInt(startTimeMs, 10) : 0,
+                    processInstanceId: processInstanceId || '',
+                    contextType: contextType || '',
+                    cost: cost || '',
                 };
             }
         }
@@ -123,6 +129,9 @@ async function executeIngestionCallback() {
     const processId = (autoData === null || autoData === void 0 ? void 0 : autoData.processId) || '';
     const dataIngestionId = (autoData === null || autoData === void 0 ? void 0 : autoData.dataIngestionId) || '';
     const startTimeMs = (autoData === null || autoData === void 0 ? void 0 : autoData.startTimeMs) || 0;
+    const processInstanceId = (autoData === null || autoData === void 0 ? void 0 : autoData.processInstanceId) || '';
+    const contextType = (autoData === null || autoData === void 0 ? void 0 : autoData.contextType) || '';
+    const cost = (autoData === null || autoData === void 0 ? void 0 : autoData.cost) || '';
     if (!docId || !callbackUrl || !embeddingSecret) {
         throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Missing ingestion context: doc_id, callback_url, or embedding_secret not found.\n\n' +
             'This operation requires a "Codika > Init Data Ingestion" node earlier in your workflow.\n' +
@@ -148,12 +157,15 @@ async function executeIngestionCallback() {
     const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : 0;
     const callbackPayload = {
         doc_id: docId,
-        process_id: processId,
-        data_ingestion_id: dataIngestionId,
+        process_id: processId || undefined,
+        data_ingestion_id: dataIngestionId || undefined,
         embedding_secret: embeddingSecret,
         status,
         extracted_tags: extractedTags,
         executionTimeMs,
+        ...(processInstanceId ? { process_instance_id: processInstanceId } : {}),
+        ...(contextType ? { context_type: contextType } : {}),
+        ...(cost ? { cost: Number(cost) } : {}),
     };
     if (status === 'skipped') {
         const skipReason = this.getNodeParameter('skipReason', 0, '');
