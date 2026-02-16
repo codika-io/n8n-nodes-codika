@@ -14,6 +14,8 @@ interface DataIngestionMetadata {
 	dataIngestionId?: string;
 	contextType?: string;
 	contextId?: string;
+	processInstanceId?: string;
+	cost?: number;
 	existingTags?: string[];
 	availableTags?: string[];
 }
@@ -57,6 +59,8 @@ function tryExtractIngestionMetadata(inputData: INodeExecutionData[]): DataInges
 		dataIngestionId: (data.data_ingestion_id as string) || (data.dataIngestionId as string),
 		contextType: (data.context_type as string) || (data.contextType as string),
 		contextId: (data.context_id as string) || (data.contextId as string),
+		processInstanceId: (data.process_instance_id as string) || (data.processInstanceId as string),
+		cost: typeof data.cost === 'number' ? data.cost : undefined,
 		existingTags: (data.existing_tags as string[]) || (data.existingTags as string[]),
 		availableTags: (data.available_tags as string[]) || (data.availableTags as string[]),
 	};
@@ -174,6 +178,8 @@ export async function executeInitDataIngestion(
 			dataIngestionId: ingestionMetadata.dataIngestionId || '',
 			contextType: ingestionMetadata.contextType || '',
 			contextId: ingestionMetadata.contextId || '',
+			processInstanceId: ingestionMetadata.processInstanceId || '',
+			cost: ingestionMetadata.cost,
 
 			// Tags
 			existingTags: ingestionMetadata.existingTags || [],
@@ -203,6 +209,18 @@ export async function executeInitDataIngestion(
 			executionContext.customData.set(
 				'codikaDataIngestionId',
 				ingestionMetadata.dataIngestionId || '',
+			);
+			executionContext.customData.set(
+				'codikaProcessInstanceId',
+				ingestionMetadata.processInstanceId || '',
+			);
+			executionContext.customData.set(
+				'codikaContextType',
+				ingestionMetadata.contextType || '',
+			);
+			executionContext.customData.set(
+				'codikaCost',
+				String(ingestionMetadata.cost ?? ''),
 			);
 			executionContext.customData.set('codikaStartTimeMs', String(startTimeMs));
 			executionContext.customData.set('codikaHasCallback', hasCallback ? 'true' : 'false');

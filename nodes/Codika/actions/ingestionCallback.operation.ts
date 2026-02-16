@@ -16,6 +16,9 @@ interface IngestionData {
 	processId: string;
 	dataIngestionId: string;
 	startTimeMs: number;
+	processInstanceId: string;
+	contextType: string;
+	cost: string;
 }
 
 /**
@@ -34,6 +37,9 @@ function tryGetIngestionData(context: IExecuteFunctions, itemIndex = 0): Ingesti
 			const startTimeMs = customData.get('codikaStartTimeMs');
 			const processId = customData.get('codikaProcessId');
 			const dataIngestionId = customData.get('codikaDataIngestionId');
+			const processInstanceId = customData.get('codikaProcessInstanceId');
+			const contextType = customData.get('codikaContextType');
+			const cost = customData.get('codikaCost');
 
 			if (docId && callbackUrl && embeddingSecret) {
 				return {
@@ -43,6 +49,9 @@ function tryGetIngestionData(context: IExecuteFunctions, itemIndex = 0): Ingesti
 					processId: processId || '',
 					dataIngestionId: dataIngestionId || '',
 					startTimeMs: startTimeMs ? parseInt(startTimeMs, 10) : 0,
+					processInstanceId: processInstanceId || '',
+					contextType: contextType || '',
+					cost: cost || '',
 				};
 			}
 		}
@@ -157,6 +166,9 @@ export async function executeIngestionCallback(
 	const processId = autoData?.processId || '';
 	const dataIngestionId = autoData?.dataIngestionId || '';
 	const startTimeMs = autoData?.startTimeMs || 0;
+	const processInstanceId = autoData?.processInstanceId || '';
+	const contextType = autoData?.contextType || '';
+	const cost = autoData?.cost || '';
 
 	// Validate required parameters from execution context
 	if (!docId || !callbackUrl || !embeddingSecret) {
@@ -192,12 +204,15 @@ export async function executeIngestionCallback(
 	// Build callback payload
 	const callbackPayload: Record<string, unknown> = {
 		doc_id: docId,
-		process_id: processId,
-		data_ingestion_id: dataIngestionId,
+		process_id: processId || undefined,
+		data_ingestion_id: dataIngestionId || undefined,
 		embedding_secret: embeddingSecret,
 		status,
 		extracted_tags: extractedTags,
 		executionTimeMs,
+		...(processInstanceId ? { process_instance_id: processInstanceId } : {}),
+		...(contextType ? { context_type: contextType } : {}),
+		...(cost ? { cost: Number(cost) } : {}),
 	};
 
 	// Add status-specific fields
