@@ -43,11 +43,15 @@ async function executeSubmitResult() {
         resultData = resultDataRaw;
     }
     const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : undefined;
+    const n8nExecutionId = (0, executionUtils_1.getN8nExecutionId)(this);
     const requestBody = {
         executionId,
         executionSecret,
         resultData,
     };
+    if (n8nExecutionId) {
+        requestBody.n8nExecutionId = n8nExecutionId;
+    }
     if (executionTimeMs !== undefined) {
         requestBody.executionTimeMs = executionTimeMs;
     }

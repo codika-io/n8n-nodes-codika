@@ -2,6 +2,7 @@ import type { IExecuteFunctions, INodeExecutionData, INodeProperties } from 'n8n
 import { NodeOperationError } from 'n8n-workflow';
 import {
 	tryGetInitNodeData,
+	getN8nExecutionId,
 	validateExecutionParams,
 	makeCodikaApiRequest,
 } from '../shared/executionUtils';
@@ -63,12 +64,19 @@ export async function executeSubmitResult(
 	// Calculate execution time if start time was provided
 	const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : undefined;
 
+	// Get the n8n execution ID to link Codika and n8n executions
+	const n8nExecutionId = getN8nExecutionId(this);
+
 	// Build request body
 	const requestBody: Record<string, unknown> = {
 		executionId,
 		executionSecret,
 		resultData,
 	};
+
+	if (n8nExecutionId) {
+		requestBody.n8nExecutionId = n8nExecutionId;
+	}
 
 	if (executionTimeMs !== undefined) {
 		requestBody.executionTimeMs = executionTimeMs;

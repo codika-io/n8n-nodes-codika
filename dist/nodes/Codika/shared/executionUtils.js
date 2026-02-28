@@ -1,12 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CODIKA_UPLOAD_URL = exports.CODIKA_API_URL = void 0;
+exports.getN8nExecutionId = getN8nExecutionId;
 exports.tryGetInitNodeData = tryGetInitNodeData;
 exports.validateExecutionParams = validateExecutionParams;
 exports.makeCodikaApiRequest = makeCodikaApiRequest;
 const n8n_workflow_1 = require("n8n-workflow");
 exports.CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
 exports.CODIKA_UPLOAD_URL = `${exports.CODIKA_API_URL}/uploadWorkflowOutput`;
+function getN8nExecutionId(context, itemIndex = 0) {
+    var _a;
+    try {
+        const proxy = context.getWorkflowDataProxy(itemIndex);
+        return (_a = proxy.$execution) === null || _a === void 0 ? void 0 : _a.id;
+    }
+    catch {
+        return undefined;
+    }
+}
 function tryGetInitNodeData(context, itemIndex = 0) {
     var _a;
     try {

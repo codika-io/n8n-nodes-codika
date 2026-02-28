@@ -5,6 +5,7 @@ import type {
 	IHttpRequestOptions,
 } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
+import { getN8nExecutionId } from '../shared/executionUtils';
 
 /**
  * Interface for ingestion data from context or Init node
@@ -201,6 +202,9 @@ export async function executeIngestionCallback(
 	// Calculate execution time
 	const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : 0;
 
+	// Get the n8n execution ID to link Codika and n8n executions
+	const n8nExecutionId = getN8nExecutionId(this);
+
 	// Build callback payload
 	const callbackPayload: Record<string, unknown> = {
 		doc_id: docId,
@@ -213,6 +217,7 @@ export async function executeIngestionCallback(
 		...(processInstanceId ? { process_instance_id: processInstanceId } : {}),
 		...(contextType ? { context_type: contextType } : {}),
 		...(cost ? { cost: Number(cost) } : {}),
+		...(n8nExecutionId ? { n8n_execution_id: n8nExecutionId } : {}),
 	};
 
 	// Add status-specific fields

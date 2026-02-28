@@ -14,6 +14,20 @@ export interface ExecutionData {
 }
 
 /**
+ * Gets the n8n execution ID from the execution context.
+ * This is n8n's internal execution ID (not the Codika execution ID).
+ * Used by Submit Result and Report Error nodes to link Codika executions to n8n executions.
+ */
+export function getN8nExecutionId(context: IExecuteFunctions, itemIndex = 0): string | undefined {
+	try {
+		const proxy = context.getWorkflowDataProxy(itemIndex);
+		return proxy.$execution?.id;
+	} catch {
+		return undefined;
+	}
+}
+
+/**
  * Tries to get execution data from the 'Codika Init' node.
  * Uses execution context (customData) set by the Init Workflow node.
  * Returns null if execution context is not available.

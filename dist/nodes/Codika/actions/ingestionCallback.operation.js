@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ingestionCallbackDescription = void 0;
 exports.executeIngestionCallback = executeIngestionCallback;
 const n8n_workflow_1 = require("n8n-workflow");
+const executionUtils_1 = require("../shared/executionUtils");
 function tryGetIngestionData(context, itemIndex = 0) {
     var _a;
     try {
@@ -155,6 +156,7 @@ async function executeIngestionCallback() {
         }
     }
     const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : 0;
+    const n8nExecutionId = (0, executionUtils_1.getN8nExecutionId)(this);
     const callbackPayload = {
         doc_id: docId,
         process_id: processId || undefined,
@@ -166,6 +168,7 @@ async function executeIngestionCallback() {
         ...(processInstanceId ? { process_instance_id: processInstanceId } : {}),
         ...(contextType ? { context_type: contextType } : {}),
         ...(cost ? { cost: Number(cost) } : {}),
+        ...(n8nExecutionId ? { n8n_execution_id: n8nExecutionId } : {}),
     };
     if (status === 'skipped') {
         const skipReason = this.getNodeParameter('skipReason', 0, '');

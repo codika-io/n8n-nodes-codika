@@ -86,12 +86,16 @@ async function executeReportError() {
         throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Error message is required.');
     }
     const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : undefined;
+    const n8nExecutionId = (0, executionUtils_1.getN8nExecutionId)(this);
     const requestBody = {
         executionId,
         executionSecret,
         errorType,
         errorMessage,
     };
+    if (n8nExecutionId) {
+        requestBody.n8nExecutionId = n8nExecutionId;
+    }
     if (failedNodeName) {
         requestBody.failedNodeName = failedNodeName;
     }

@@ -2,6 +2,7 @@ import type { IExecuteFunctions, INodeExecutionData, INodeProperties } from 'n8n
 import { NodeOperationError } from 'n8n-workflow';
 import {
 	tryGetInitNodeData,
+	getN8nExecutionId,
 	validateExecutionParams,
 	makeCodikaApiRequest,
 } from '../shared/executionUtils';
@@ -104,6 +105,9 @@ export async function executeReportError(
 	// Calculate execution time if start time was provided
 	const executionTimeMs = startTimeMs > 0 ? Date.now() - startTimeMs : undefined;
 
+	// Get the n8n execution ID to link Codika and n8n executions
+	const n8nExecutionId = getN8nExecutionId(this);
+
 	// Build request body - API expects flat structure, not nested error object
 	const requestBody: Record<string, unknown> = {
 		executionId,
@@ -111,6 +115,10 @@ export async function executeReportError(
 		errorType,
 		errorMessage,
 	};
+
+	if (n8nExecutionId) {
+		requestBody.n8nExecutionId = n8nExecutionId;
+	}
 
 	if (failedNodeName) {
 		requestBody.failedNodeName = failedNodeName;
