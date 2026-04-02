@@ -14,7 +14,7 @@ The other callback nodes hardcode the Codika API URL directly:
 | Report Error | Hardcoded: `CODIKA_API_URL/submitWorkflowError` |
 | Ingestion Callback | Dynamic: extracted from payload → `callbackUrl` |
 
-The callback URL is always the same endpoint (`https://europe-west1-codika-app.cloudfunctions.net/submitEmbeddingResult`), hardcoded in the cloud function's `getCallbackUrl()` helper. There's no reason for it to be dynamic.
+The callback URL is always the same endpoint (`https://api.codika.io/submitEmbeddingResult`), hardcoded in the cloud function's `getCallbackUrl()` helper. There's no reason for it to be dynamic.
 
 **To fix:** Hardcode `CODIKA_API_URL/submitEmbeddingResult` in `ingestionCallback.operation.ts` (like the other nodes), and stop passing `callback_url` in the webhook payload from the Firestore triggers. This requires coordinating:
 

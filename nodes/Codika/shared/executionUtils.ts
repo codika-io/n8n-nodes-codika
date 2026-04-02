@@ -1,7 +1,7 @@
 import type { IExecuteFunctions, IHttpRequestOptions } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
 
-export const CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
+export const CODIKA_API_URL = process.env.CODIKA_API_URL || 'https://api.codika.io';
 export const CODIKA_UPLOAD_URL = `${CODIKA_API_URL}/uploadWorkflowOutput`;
 
 /**

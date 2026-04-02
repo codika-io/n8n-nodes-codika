@@ -6,7 +6,7 @@ exports.tryGetInitNodeData = tryGetInitNodeData;
 exports.validateExecutionParams = validateExecutionParams;
 exports.makeCodikaApiRequest = makeCodikaApiRequest;
 const n8n_workflow_1 = require("n8n-workflow");
-exports.CODIKA_API_URL = 'https://europe-west1-codika-app.cloudfunctions.net';
+exports.CODIKA_API_URL = process.env.CODIKA_API_URL || 'https://api.codika.io';
 exports.CODIKA_UPLOAD_URL = `${exports.CODIKA_API_URL}/uploadWorkflowOutput`;
 function getN8nExecutionId(context, itemIndex = 0) {
     var _a;
