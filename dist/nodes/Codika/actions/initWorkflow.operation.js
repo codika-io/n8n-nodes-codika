@@ -154,7 +154,7 @@ async function executeInitWorkflow() {
     };
     const options = {
         method: 'POST',
-        url: `${executionUtils_1.CODIKA_API_URL}/createWorkflowExecution`,
+        url: `${executionUtils_1.CODIKA_API_URL}/createworkflowexecution`,
         body: requestBody,
         json: true,
     };

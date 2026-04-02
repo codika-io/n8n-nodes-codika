@@ -134,7 +134,7 @@ export async function executeReportError(
 
 	try {
 		// Make API request
-		await makeCodikaApiRequest(this, 'submitWorkflowError', requestBody);
+		await makeCodikaApiRequest(this, 'submitworkflowerror', requestBody);
 
 		// Return success response (don't throw - this node IS the error handler)
 		returnData.push({

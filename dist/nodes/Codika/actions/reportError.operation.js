@@ -106,7 +106,7 @@ async function executeReportError() {
         requestBody.executionTimeMs = executionTimeMs;
     }
     try {
-        await (0, executionUtils_1.makeCodikaApiRequest)(this, 'submitWorkflowError', requestBody);
+        await (0, executionUtils_1.makeCodikaApiRequest)(this, 'submitworkflowerror', requestBody);
         returnData.push({
             json: {
                 success: true,

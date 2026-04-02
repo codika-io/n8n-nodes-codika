@@ -56,7 +56,7 @@ async function executeSubmitResult() {
         requestBody.executionTimeMs = executionTimeMs;
     }
     try {
-        await (0, executionUtils_1.makeCodikaApiRequest)(this, 'submitWorkflowResult', requestBody);
+        await (0, executionUtils_1.makeCodikaApiRequest)(this, 'submitworkflowresult', requestBody);
         returnData.push({
             json: {
                 success: true,

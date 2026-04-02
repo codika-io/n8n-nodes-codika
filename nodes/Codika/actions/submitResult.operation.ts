@@ -84,7 +84,7 @@ export async function executeSubmitResult(
 
 	try {
 		// Make API request
-		await makeCodikaApiRequest(this, 'submitWorkflowResult', requestBody);
+		await makeCodikaApiRequest(this, 'submitworkflowresult', requestBody);
 
 		// Return success response
 		returnData.push({

@@ -3,7 +3,7 @@ import { NodeOperationError } from 'n8n-workflow';
 
 // eslint-disable-next-line @n8n/community-nodes/no-restricted-globals
 export const CODIKA_API_URL = process.env.CODIKA_API_URL || 'https://api.codika.io';
-export const CODIKA_UPLOAD_URL = `${CODIKA_API_URL}/uploadWorkflowOutput`;
+export const CODIKA_UPLOAD_URL = `${CODIKA_API_URL}/uploadworkflowoutput`;
 
 /**
  * Interface for execution data from the Init node

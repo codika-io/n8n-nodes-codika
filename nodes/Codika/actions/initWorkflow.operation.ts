@@ -222,7 +222,7 @@ export async function executeInitWorkflow(
 	// Make HTTP request to Codika API
 	const options: IHttpRequestOptions = {
 		method: 'POST',
-		url: `${CODIKA_API_URL}/createWorkflowExecution`,
+		url: `${CODIKA_API_URL}/createworkflowexecution`,
 		body: requestBody,
 		json: true,
 	};
